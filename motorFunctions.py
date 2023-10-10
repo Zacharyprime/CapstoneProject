@@ -58,6 +58,12 @@ class Motor:
 
         # Set the PWM
         self.set_pwm(abs(speed))
+
+    def turn_until_flag(self, encoder, flag_value):
+        while encoder.get_position() != flag_value:
+            self.setSpeed(0, 50)  # Adjust the speed as needed
+        self.setSpeed(0, 0)  # Stop the motor
+        encoder.reset_encoder()
     
     def cleanup(self):
         try:
