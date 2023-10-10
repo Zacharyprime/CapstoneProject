@@ -52,19 +52,3 @@ class Aeroflex:
         freq = freq[0:3] + '.' + freq[3:9]  # Split the freq string into MHz
         return freq
 
-# Example usage:
-if __name__ == "__main__":
-    aeroflex = Aeroflex("Aeroflex_IP_Address")
-
-    # Disable RF output
-    aeroflex.disable_rf_output()
-    print("RF output disabled")
-
-    # Grab the frequency
-    current_frequency = aeroflex.retrieve_frequency()
-    print(f"Current frequency: {current_frequency} MHz")
-
-    # Enable RF output
-    aeroflex.enable_rf_output()
-    print("RF output enabled")
-

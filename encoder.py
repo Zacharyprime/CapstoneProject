@@ -1,55 +1,38 @@
 import RPi.GPIO as GPIO
 import threading
-import time
 
-# Define GPIO pins for the encoder
-PIN_A = 17  # Replace with your actual GPIO pin numbers
-PIN_B = 18
+class Encoder:
+    def __init__(self, pin_a, pin_b):
+        self.pin_a = pin_a
+        self.pin_b = pin_b
+        self.encoder_position = 0
+        self.encoder_lock = threading.Lock()
 
-# Global variables for encoder position
-encoder_position = 0
-encoder_lock = threading.Lock()
+        # Initialize GPIO
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.pin_a, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.pin_b, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-# Initialize GPIO
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(PIN_A, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(PIN_B, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        # Add event detection for the encoder
+        GPIO.add_event_detect(self.pin_a, GPIO.FALLING, callback=self.encoder_callback, bouncetime=10)
 
-# Function to update encoder position
-def encoder_callback(channel):
-    global encoder_position
-    global encoder_lock
+    def encoder_callback(self, channel):
+        with self.encoder_lock:
+            state_a = GPIO.input(self.pin_a)
+            state_b = GPIO.input(self.pin_b)
 
-    with encoder_lock:
-        state_A = GPIO.input(PIN_A)
-        state_B = GPIO.input(PIN_B)
+            if state_a == state_b:
+                self.encoder_position += 1
+            else:
+                self.encoder_position -= 1
 
-        if state_A == state_B:
-            encoder_position += 1
-        else:
-            encoder_position -= 1
+    def reset_encoder(self):
+        with self.encoder_lock:
+            self.encoder_position = 0
 
-# Thread for encoder tracking
-def encoder_thread():
-    GPIO.add_event_detect(PIN_A, GPIO.FALLING, callback=encoder_callback, bouncetime=10)
+    def get_position(self):
+        with self.encoder_lock:
+            return self.encoder_position
 
-# Your main code
-def main_code():
-    while True:
-        # Your main code here
-        print(f"Encoder position: {encoder_position}")
-        time.sleep(1)
-
-if __name__ == "__main__":
-    try:
-        encoder_thread = threading.Thread(target=encoder_thread)
-        encoder_thread.daemon = True  # Set as daemon to exit when the main program exits
-        encoder_thread.start()
-
-        main_code()
-
-    except KeyboardInterrupt:
-        pass
-
-    finally:
-        GPIO.cleanup()  # Cleanup GPIO on program exit
+    def cleanup(self):
+        GPIO.cleanup()
