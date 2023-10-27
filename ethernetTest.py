@@ -47,10 +47,23 @@ class Aeroflex:
     def retrieve_frequency(self):
         """Retrieve the frequency from the Aeroflex."""
         response = self.read_command(":RF:GENerator:FREQuency?")
-        return int(response)
-    
-    def retrieve_frequency(self):
-        """Retrieve the frequency from the Aeroflex."""
-        response = self.read_command(":SA:MARKer:MKR1:LEVel?")
-        return int(response)
+        freq_string_list = response.split(',')
+        freq = freq_string_list[1]
+        freq = freq[0:3] + '.' + freq[3:9]  # Split the freq string into MHz
+        return freq
 
+
+
+aeroflex = Aeroflex("Aeroflex_IP_Address")
+
+# Disable RF output
+aeroflex.disable_rf_output()
+print("RF output disabled")
+
+# Grab the frequency
+current_frequency = aeroflex.retrieve_frequency()
+print(f"Current frequency: {current_frequency} MHz")
+
+# Enable RF output
+aeroflex.enable_rf_output()
+print("RF output enabled")
