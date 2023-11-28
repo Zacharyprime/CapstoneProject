@@ -42,7 +42,7 @@ def roughTune(frequency,motorPins,encoder):
         printf("Frequency too low, outside of VHF band")
     elif(frequency>400):
         printf("Frequency too high, outside of UHF band")
-    else
+    else:
         printf("Frequency invalid, range (150,225) is not defined by manual")
 
     #Set the encoder to zero so we are tracking from start
@@ -166,7 +166,8 @@ if __name__ == "__main__":
     ##RESET POSITIONS##
     #Turn all the way CW to the hard stop
     resetPosition(currentSensor,motor1Pins) #Reset motor 1
-    while(not GPIO.input(currentSensor)) #Wait for the current sensor to return
+    while(not GPIO.input(currentSensor)): #Wait for the current sensor to return
+        pass
     resetPosition(currentSensor,motor2Pins) #Reset motor 2
     printf("Position Reset Complete.")
 
