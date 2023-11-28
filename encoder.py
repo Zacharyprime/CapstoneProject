@@ -10,13 +10,13 @@ class Encoder:
 
         # Initialize GPIO
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.pin_a, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(self.pin_b, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.pin_a, GPIO.IN)
+        GPIO.setup(self.pin_b, GPIO.IN)
 
         # Add event detection for the encoder
         GPIO.add_event_detect(self.pin_a, GPIO.FALLING, callback=self.encoder_callback, bouncetime=10)
 
-    def encoder_callback(self, channel):
+    def encoder_callback(self):
         with self.encoder_lock:
             state_a = GPIO.input(self.pin_a)
             state_b = GPIO.input(self.pin_b)

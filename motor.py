@@ -1,13 +1,12 @@
 import RPi.GPIO as GPIO
 import time
 
-# Motor control logic
-SHORT_BRAKE = (1, 1)
-STOP = (0, 0)
-CCW = (0, 1)
-CW = (1, 0)
+def motor_speed(speed, motorPins):
 
-def motor_speed(speed, pwmPin, in1Pin, in2Pin):
+    pwmPin = motorPins[0]
+    in1Pin = motorPins[1]
+    in2Pin = motorPins[2]
+
     # Initialize GPIO
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(pwmPin, GPIO.OUT)
@@ -20,16 +19,16 @@ def motor_speed(speed, pwmPin, in1Pin, in2Pin):
 
     # Set the motor direction based on speed
     if speed == 0:
-        GPIO.output(in1Pin, STOP[0])
-        GPIO.output(in2Pin, STOP[1])
+        GPIO.output(in1Pin, 0)
+        GPIO.output(in2Pin, 0)
         pwm.ChangeDutyCycle(0)
     elif speed > 0:
-        GPIO.output(in1Pin, CCW[0])
-        GPIO.output(in2Pin, CCW[1])
+        GPIO.output(in1Pin, 0)
+        GPIO.output(in2Pin, 1)
         pwm.ChangeDutyCycle(speed)
     else:
-        GPIO.output(in1Pin, CW[0])
-        GPIO.output(in2Pin, CW[1])
+        GPIO.output(in1Pin, 1)
+        GPIO.output(in2Pin, 0)
         pwm.ChangeDutyCycle(-speed)
 
     # Delay for a while (you can remove this if not needed)
