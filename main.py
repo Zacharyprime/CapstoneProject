@@ -1,4 +1,5 @@
 import ethernet
+from ethernet import Aeroflex
 import encoder
 import motor
 import threading
