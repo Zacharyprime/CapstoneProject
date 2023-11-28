@@ -54,3 +54,8 @@ class Aeroflex:
         response = self.read_command(":SA:MARKer:MKR1:LEVel?")
         return int(response)
 
+    def getPWR(self):
+        """Retrieve the frequency from the Aeroflex."""
+        response = self.read_command(":SA:MARKer:MKR1:LEVel?")
+        return response
+
